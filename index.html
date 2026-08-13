@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lua Script Encrypter - Web Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>🛡️ Lua Script Encrypter</h2>
+            <p>Protected by Tùng đen Style System</p>
+        </header>
+
+        <div class="form-group">
+            <label for="scriptInput">Paste Your Plaintext Lua Script:</label>
+            <textarea id="scriptInput" placeholder="-- Paste your code here..."></textarea>
+        </div>
+
+        <div class="options">
+            <label>
+                <input type="checkbox" id="expiryCheck"> Enable Online Expiration
+            </label>
+        </div>
+
+        <button id="encryptBtn" onclick="processEncryption()">Encrypt Script</button>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label for="scriptOutput">Encrypted Result:</label>
+            <textarea id="scriptOutput" readonly placeholder="Encrypted output will appear here..."></textarea>
+        </div>
+        
+        <button id="downloadBtn" style="display:none;" onclick="downloadScript()">Download Encrypted .lua</button>
+    </div>
+
+    <script>
+        function processEncryption() {
+            const code = document.getElementById('scriptInput').value;
+            const useExpiry = document.getElementById('expiryCheck').checked;
+
+            if (!code) {
+                alert("Please enter a Lua script first!");
+                return;
+            }
+
+            // Kirim data ke backend PHP untuk diproses
+            fetch('encrypt.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ script: code, expiry: useExpiry })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('scriptOutput').value = data.encrypted;
+                    document.getElementById('downloadBtn').style.display = 'block';
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function downloadScript() {
+            const text = document.getElementById('scriptOutput').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.download = "Script_Encrypted.#Enc.lua";
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.target = "_blank";
+            anchor.style.display = "none";
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+        }
+    </script>
+</body>
+</html>
