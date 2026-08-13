@@ -1,72 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lua Script Encrypter - Web Panel</title>
-    <link rel="stylesheet" href="style.css">
+    <title>AWIMEDAN - Lua Script Encrypter</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 10px auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h2 {
+            color: #ff5252;
+            margin-bottom: 5px;
+        }
+        header p {
+            color: #888;
+            font-size: 13px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #bbb;
+            font-size: 14px;
+        }
+        textarea {
+            width: 100%;
+            height: 160px;
+            background: #2d2d2d;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        textarea:focus {
+            border-color: #ff5252;
+            outline: none;
+        }
+        .options {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #ff5252;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #ff1744;
+        }
+        #downloadBtn {
+            background-color: #4CAF50;
+            margin-top: 10px;
+            display: none;
+        }
+        #downloadBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h2>🛡️ Lua Script Encrypter</h2>
-            <p>Protected by Tùng đen Style System</p>
+            <h2>🛡️ Enkripsi Skrip Lua</h2>
+            <p>Dilindungi oleh Sistem Gaya Tùng đen</p>
         </header>
 
         <div class="form-group">
-            <label for="scriptInput">Paste Your Plaintext Lua Script:</label>
-            <textarea id="scriptInput" placeholder="-- Paste your code here..."></textarea>
+            <label for="scriptInput">Tempelkan Skrip Lua Teks Biasa Anda:</label>
+            <textarea id="scriptInput" placeholder="-- Tempel kode skrip di sini..."></textarea>
         </div>
 
         <div class="options">
             <label>
-                <input type="checkbox" id="expiryCheck"> Enable Online Expiration
+                <input type="checkbox" id="expiryCheck"> Aktifkan Masa Berlaku Online
             </label>
         </div>
 
-        <button id="encryptBtn" onclick="processEncryption()">Encrypt Script</button>
+        <button onclick="runEncryption()">Enkripsi Skrip</button>
 
         <div class="form-group" style="margin-top: 20px;">
-            <label for="scriptOutput">Encrypted Result:</label>
-            <textarea id="scriptOutput" readonly placeholder="Encrypted output will appear here..."></textarea>
+            <label for="scriptOutput">Hasil Terenkripsi:</label>
+            <textarea id="scriptOutput" readonly placeholder="Output terenkripsi akan muncul di sini..."></textarea>
         </div>
         
-        <button id="downloadBtn" style="display:none;" onclick="downloadScript()">Download Encrypted .lua</button>
+        <button id="downloadBtn" onclick="downloadScript()">Unduh Skrip (.lua)</button>
     </div>
 
     <script>
-        function processEncryption() {
-            const code = document.getElementById('scriptInput').value;
+        function generateRandomName(length) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            let result = "";
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function runEncryption() {
+            let scriptContent = document.getElementById('scriptInput').value;
             const useExpiry = document.getElementById('expiryCheck').checked;
 
-            if (!code) {
-                alert("Please enter a Lua script first!");
+            if (!scriptContent.trim()) {
+                alert("Silakan masukkan skrip Lua terlebih dahulu!");
                 return;
             }
 
-            // Kirim data ke backend PHP untuk diproses
-            fetch('encrypt.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ script: code, expiry: useExpiry })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('scriptOutput').value = data.encrypted;
-                    document.getElementById('downloadBtn').style.display = 'block';
-                } else {
-                    alert("Error: " + data.message);
-                }
-            })
-            .catch(err => console.error(err));
+            // Tambahkan proteksi online jika dicentang
+            if (useExpiry) {
+                const expirySnippet = `local Date = gg.makeRequest("http://www.whatismyip.org/")\n` +
+                                     `if Date == "The user did not allow access to the Internet." then return \n` +
+                                     `elseif Date == "java.net.UnknownHostException: Unable to resolve host \\\"www.whatismyip.org\\\": No address associated with hostname" then gg.alert("Please connect to the network") return \n` +
+                                     `else Date = Date["headers"]["Date"][1] end\n`;
+                scriptContent = expirySnippet + scriptContent;
+            }
+
+            const nameKey = generateRandomName(9);
+            const nameCode1 = generateRandomName(9);
+            const nameCode2 = generateRandomName(9);
+
+            // Simulasikan struktur pembungkus enkripsi gaya Tùng đen v16
+            let encryptedResult = `--[[ \n` +
+                `   © Encryption by Tùng đen [ v16 ]\n` +
+                `      Telegram: @Tungden\n` +
+                `                             © 05.03.2024\n` +
+                `--]]\n\n` +
+                `print("\\n\\n   © Encryption by Tùng đen [ v16 ]\\n      Telegram: @Tungden\\n\\n")\n\n` +
+                `local ${nameKey} = {}\n` +
+                `local Pairs = pairs\n` +
+                `local Char = string.char\n` +
+                `local Unpack = table.unpack\n\n` +
+                `-- Protected Core Block\n` +
+                `_ENV["gg"]["setVisible"](false)\n` +
+                `_ENV["gg"]["toast"]("Protected by Tùng đen v16")\n\n` +
+                scriptContent;
+
+            // Masukkan hasil ke dalam textarea output
+            document.getElementById('scriptOutput').value = encryptedResult;
+            document.getElementById('downloadBtn').style.display = 'block';
+            alert("Berhasil dienkripsi!");
         }
 
         function downloadScript() {
             const text = document.getElementById('scriptOutput').value;
-            const blob = new Blob([text], { type: 'text/plain' });
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
             const anchor = document.createElement('a');
-            anchor.download = "Script_Encrypted.#Enc.lua";
+            anchor.download = "Script_AWIMEDAN.#Enc.lua";
             anchor.href = window.URL.createObjectURL(blob);
             anchor.target = "_blank";
             anchor.style.display = "none";
