@@ -192,23 +192,17 @@ function prosesBenar(isifile){
     if(expBulan.length === 1) expBulan = "0" + expBulan
     if(expTanggal.length === 1) expTanggal = "0" + expTanggal
 
-    let kunciHex = Math.floor(Math.random() * 200) + 50;
-    let isiHex = jadikanHex(isifile, kunciHex);
-
     let scriptExpiredCode = ""
     if (isExpiredAktif) {
         scriptExpiredCode = `local Date = gg.makeRequest("http://www.whatismyip.org/")\n` +
-            `if Date == "The user did not allow access to the Internet." then\n` +
-            `return\n` +
-            `elseif Date == "java.net.UnknownHostException: Unable to resolve host \\"www.whatismyip.org\\": No address associated with hostname" then\n` +
-            `gg.alert("Please connect to the network")\n` +
-            `return\n` +
+            `if Date == "The user did not allow access to the Internet." then return\n` +
+            `elseif Date == "java.net.UnknownHostException: Unable to resolve host" then return\n` +
             `else\n` +
             `Date = Date["headers"]["Date"][1]\n` +
             `if tonumber(Date:sub(13, 16) .. ({\n` +
-            `["Jan"] = "01",\n["Feb"] = "02",\n["Mar"] = "03",\n["Apr"] = "04",\n` +
-            `["May"] = "05",\n["Jun"] = "06",\n["Jul"] = "07",\n["Aug"] = "08",\n` +
-            `["Sep"] = "09",\n["Oct"] = "10",\n["Nov"] = "11",\n["Dec"] = "12",\n` +
+            `["Jan"] = "01", ["Feb"] = "02", ["Mar"] = "03", ["Apr"] = "04",\n` +
+            `["May"] = "05", ["Jun"] = "06", ["Jul"] = "07", ["Aug"] = "08",\n` +
+            `["Sep"] = "09", ["Oct"] = "10", ["Nov"] = "11", ["Dec"] = "12",\n` +
             `})[Date:sub(9, 11)] .. Date:sub(6, 7)) >= tonumber(` + expTahun + expBulan + expTanggal + `) then\n` +
             `gg.alert("` + expPesan + `")\n` +
             `return\n` +
@@ -216,63 +210,32 @@ function prosesBenar(isifile){
             `end\n`
     }
 
+    // Menggunakan metode escape string blok panjang [==[ ... ]==] agar aman dari error karakter khusus
     let baseScript = `-- =====================================\n` +
         `-- 📜 By AWIMEDAN SCRIPT SYSTEM\n` +
         `-- 👤 Username : ${document.getElementById('user').value.trim()}\n` +
-        `-- 👥 Slot Pemain : ${jml}\n` +
         `-- =====================================\n\n` +
         scriptExpiredCode + `\n` +
-        `-- Verifikasi Username & Kunci Akses (AWIMEDAN)\n` +
         `local inputUser = gg.prompt({\n` +
         `    '👤 Masukkan Username:',\n` +
         `    '🔑 Masukkan Kunci Akses:',\n` +
         `    '👥 Jumlah Pemain:'\n` +
-        `}, {\n` +
-        `    '',\n` +
-        `    '',\n` +
-        `    '` + jml + `'\n` +
-        `}, {\n` +
-        `    'text',\n` +
-        `    'text',\n` +
-        `    'number'\n` +
-        `})\n\n` +
-        `if not inputUser then\n` +
-        `    gg.alert('Dibatalkan')\n` +
+        `}, {'', '', '` + jml + `'}, {'text', 'text', 'number'})\n\n` +
+        `if not inputUser or inputUser[1] ~= '` + user + `' or inputUser[2] ~= '` + kunci + `' then\n` +
+        `    gg.alert('❌ Verifikasi Gagal / Salah!')\n` +
         `    return os.exit()\n` +
         `end\n\n` +
-        `if inputUser[1] ~= '` + user + `' then\n` +
-        `    gg.alert('❌ Username Salah!')\n` +
-        `    return os.exit()\n` +
-        `end\n\n` +
-        `if inputUser[2] ~= '` + kunci + `' then\n` +
-        `    gg.alert('❌ Kunci Akses Salah!')\n` +
-        `    return os.exit()\n` +
-        `end\n\n` +
-        `gg.toast('Verifikasi Berhasil')\n` +
-        `gg.alert('✅ AKSES DITERIMA\\n👥 Slot Pemain: ' .. tostring(inputUser[3]))\n\n` +
-        `local decodeHex = function(h)\n` +
-        `    local s = ""\n` +
-        `    for i = 1, #h, 2 do\n` +
-        `        local b = tonumber("0x" .. h:sub(i, i+1))\n` +
-        `        if b then s = s .. string.char(b ~ ` + kunciHex + `) end\n` +
-        `    end\n` +
-        `    return s\n` +
-        `end\n\n` +
-        `local encryptedData = "${isiHex}"\n` +
-        `local rawScript = decodeHex(encryptedData)\n` +
-        `local loadFunc = loadstring or load\n` +
-        `local runningScript, err = loadFunc(rawScript)\n\n` +
-        `if not runningScript then\n` +
-        `    gg.alert("Error Eksekusi Script: " .. tostring(err))\n` +
+        `gg.toast('Verifikasi Berhasil')\n\n` +
+        `local rawScript = [==[` + isifile + `]==]\n` +
+        `local fn, err = load(rawScript)\n` +
+        `if not fn then\n` +
+        `    gg.alert("Error Script: " .. tostring(err))\n` +
         `    return\n` +
-        `end\n\n` +
-        `runningScript()`;
+        `end\n` +
+        `fn()`;
 
     hasilTerkunci = baseScript;
-
-    let previewText = hasilTerkunci.length > 50000 ? hasilTerkunci.substring(0, 50000) + "\n\n[... Teks terlalu panjang untuk pratinjau, silakan langsung simpan file ...]" : hasilTerkunci;
-
-    document.getElementById('hasilakhir').textContent = previewText;
+    document.getElementById('hasilakhir').textContent = hasilTerkunci;
     document.getElementById('proses').style.display = "none";
     document.getElementById('hasilakhir').style.display = "block";
     document.getElementById('btnsimpan').style.display = "block";
